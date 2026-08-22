@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32">
+  <defs>
+    <linearGradient id="bloodGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#dc2626"/>
+      <stop offset="100%" stop-color="#991b1b"/>
+    </linearGradient>
+  </defs>
+  <rect width="24" height="24" rx="6" fill="url(#bloodGrad)"/>
+  <path d="M12 4.5l3.5 3.5a5 5 0 1 1-7 0z" fill="white" fill-opacity="0.95"/>
+  <circle cx="12" cy="12.5" r="1.5" fill="#dc2626"/>
+</svg>
