@@ -21,6 +21,7 @@ import Button from '../../components/common/Button';
 import Badge from '../../components/common/Badge';
 import BloodBadge from '../../components/common/BloodBadge';
 import useAuth from '../../hooks/useAuth';
+import { getUserAvatar } from '../../utils/avatar';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -95,8 +96,13 @@ export default function Dashboard() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl bg-gradient-to-r from-red-600 via-rose-600 to-slate-900 text-white shadow-lg">
         <div className="flex items-center gap-4">
           <img
-            src={user?.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80'}
+            src={getUserAvatar(user)}
             alt={user?.name}
+            referrerPolicy="no-referrer"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'User')}&background=dc2626&color=ffffff&bold=true&rounded=true`;
+            }}
             className="w-14 h-14 rounded-2xl object-cover border-2 border-white/40 shadow-sm"
           />
           <div className="space-y-1">

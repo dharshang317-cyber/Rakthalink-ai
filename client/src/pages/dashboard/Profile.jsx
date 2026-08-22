@@ -22,6 +22,7 @@ import Badge from '../../components/common/Badge';
 import Spinner from '../../components/common/Spinner';
 import useAuth from '../../hooks/useAuth';
 import { updateUserProfile, deactivateAccount } from '../../services/userService';
+import { getUserAvatar } from '../../utils/avatar';
 
 export default function Profile() {
   const [searchParams] = useSearchParams();
@@ -160,8 +161,13 @@ export default function Profile() {
         <Card title="Google Account Information" subtitle="Verified via Google OAuth 2.0 (Read-Only)">
           <div className="flex flex-col sm:flex-row items-center gap-5">
             <img
-              src={user?.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80'}
+              src={getUserAvatar(user)}
               alt={user?.name}
+              referrerPolicy="no-referrer"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'User')}&background=dc2626&color=ffffff&bold=true&rounded=true`;
+              }}
               className="w-16 h-16 rounded-2xl object-cover border border-slate-200 shadow-xs"
             />
             <div className="space-y-1 text-center sm:text-left flex-1">

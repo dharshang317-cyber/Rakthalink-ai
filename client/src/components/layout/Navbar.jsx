@@ -19,6 +19,7 @@ import Logo from '../common/Logo';
 import Button from '../common/Button';
 import Badge from '../common/Badge';
 import useAuth from '../../hooks/useAuth';
+import { getUserAvatar } from '../../utils/avatar';
 
 export default function Navbar() {
   const { user, logout, isAuthenticated } = useAuth();
@@ -94,9 +95,14 @@ export default function Navbar() {
                     className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-slate-100 border border-slate-200 transition"
                   >
                     <img
-                      src={user.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80'}
+                      src={getUserAvatar(user)}
                       alt={user.name}
-                      className="w-7 h-7 rounded-lg object-cover"
+                      referrerPolicy="no-referrer"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || 'User')}&background=dc2626&color=ffffff&bold=true&rounded=true`;
+                      }}
+                      className="w-7 h-7 rounded-lg object-cover border border-slate-200"
                     />
                     <span className="text-xs font-semibold text-slate-700 max-w-[110px] truncate">{user.name}</span>
                     <ChevronDown className="w-3.5 h-3.5 text-slate-400" />

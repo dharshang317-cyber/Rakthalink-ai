@@ -15,6 +15,7 @@ import BloodBadge from '../common/BloodBadge';
 import Badge from '../common/Badge';
 import Button from '../common/Button';
 import ScoreGauge from './ScoreGauge';
+import { getUserAvatar } from '../../utils/avatar';
 
 export default function MatchCard({ match, onSendRequest }) {
   const [sending, setSending] = useState(false);
@@ -41,8 +42,13 @@ export default function MatchCard({ match, onSendRequest }) {
         <div className="flex items-start gap-3.5">
           <div className="relative">
             <img
-              src={match.donorAvatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80'}
+              src={getUserAvatar({ avatar: match.donorAvatar, name: match.donorName })}
               alt={match.donorName}
+              referrerPolicy="no-referrer"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(match.donorName || 'Donor')}&background=dc2626&color=ffffff&bold=true&rounded=true`;
+              }}
               className="w-12 h-12 rounded-2xl object-cover border border-slate-200"
             />
             <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-500 ring-2 ring-white"></div>

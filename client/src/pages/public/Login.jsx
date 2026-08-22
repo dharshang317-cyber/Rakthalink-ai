@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
-import { ShieldCheck, Lock, AlertCircle, ArrowLeft, HeartHandshake, CheckCircle2 } from 'lucide-react';
+import { ShieldCheck, Lock, AlertCircle, ArrowLeft, HeartHandshake } from 'lucide-react';
 import Logo from '../../components/common/Logo';
 import Card from '../../components/common/Card';
 import Spinner from '../../components/common/Spinner';
@@ -15,8 +15,6 @@ export default function Login() {
   const isRegister = mode === 'register';
 
   const { loginWithGoogleToken, isLoading, authError, setAuthError } = useAuth();
-  const [devEmail, setDevEmail] = useState('');
-  const [showDevAuth, setShowDevAuth] = useState(false);
 
   const handleGoogleSuccess = async (credentialResponse) => {
     if (!credentialResponse.credential) {
@@ -26,7 +24,6 @@ export default function Login() {
 
     const result = await loginWithGoogleToken(credentialResponse.credential);
     if (result.success) {
-      // If user profile is newly created or incomplete, navigate to role onboarding in Phase 6
       if (result.isNewUser || !result.user?.isProfileCompleted) {
         navigate('/profile?onboarding=true');
       } else {
@@ -37,17 +34,6 @@ export default function Login() {
 
   const handleGoogleError = () => {
     setAuthError('Google Sign-In failed or was cancelled. Please try again.');
-  };
-
-  // Helper for quick local development testing without live Google Client ID
-  const handleDevLogin = async (e) => {
-    e.preventDefault();
-    if (!devEmail.trim()) return;
-    const testToken = `dev_test_token_${devEmail.trim().toLowerCase()}`;
-    const result = await loginWithGoogleToken(testToken);
-    if (result.success) {
-      navigate(redirect);
-    }
   };
 
   return (
@@ -74,8 +60,8 @@ export default function Login() {
             </h2>
             <p className="text-xs text-slate-500 max-w-xs mx-auto">
               {isRegister
-                ? 'Authenticate with your Google Account to become a donor or submit urgent blood requests.'
-                : 'Authenticate with your Google Account to access your donor dashboard and active requests.'}
+                ? 'Authenticate securely with your Google Account to become a donor or submit blood requests.'
+                : 'Authenticate securely with your Google Account to access your donor dashboard and active requests.'}
             </p>
           </div>
 
@@ -83,12 +69,12 @@ export default function Login() {
             <div className="mt-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700 flex items-start gap-2">
               <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
               <div className="flex-1">
-                <span className="font-semibold">Authentication Notice:</span> {authError}
+                <span className="font-semibold">Notice:</span> {authError}
               </div>
             </div>
           )}
 
-          {/* Primary Real Google Sign-In Portal */}
+          {/* Secure Google OAuth 2.0 Sign-In Portal */}
           <div className="pt-6 space-y-5">
             <div className="w-full flex justify-center">
               {isLoading ? (
@@ -123,42 +109,6 @@ export default function Login() {
               </div>
             </div>
 
-            {/* Development Mock Authenticator Toggle for Local Testing */}
-            <div className="pt-2 text-center">
-              <button
-                type="button"
-                onClick={() => setShowDevAuth(!showDevAuth)}
-                className="text-[11px] text-slate-400 hover:text-slate-600 underline"
-              >
-                {showDevAuth ? 'Hide Local Test Authenticator' : '⚡ Local Development Test Sign-In'}
-              </button>
-
-              {showDevAuth && (
-                <form onSubmit={handleDevLogin} className="mt-3 p-3 bg-slate-50 rounded-xl border border-slate-200 text-left space-y-2">
-                  <label className="text-[11px] font-semibold text-slate-600 block">
-                    Test with any custom Google account email:
-                  </label>
-                  <div className="flex gap-2">
-                    <input
-                      type="email"
-                      value={devEmail}
-                      onChange={(e) => setDevEmail(e.target.value)}
-                      placeholder="e.g. user.karthik@gmail.com"
-                      className="flex-1 px-3 py-1.5 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-red-500"
-                    />
-                    <button
-                      type="submit"
-                      className="px-3 py-1.5 bg-slate-800 text-white rounded-lg text-xs font-semibold hover:bg-slate-700"
-                    >
-                      Sign In
-                    </button>
-                  </div>
-                  <p className="text-[10px] text-slate-400">
-                    * Creates/authenticates a dedicated individual account for testing multi-user flows.
-                  </p>
-                </form>
-              )}
-            </div>
           </div>
         </Card>
 

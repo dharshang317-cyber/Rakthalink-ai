@@ -23,6 +23,7 @@ import Badge from '../../components/common/Badge';
 import BloodBadge from '../../components/common/BloodBadge';
 import Spinner from '../../components/common/Spinner';
 import useAuth from '../../hooks/useAuth';
+import { getUserAvatar } from '../../utils/avatar';
 import {
   fetchMyAppointments,
   scheduleAppointment,
@@ -269,8 +270,13 @@ export default function AppointmentsPage() {
                   <div className="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
                       <img
-                        src={otherParty.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80'}
+                        src={getUserAvatar(otherParty)}
                         alt={otherParty.name}
+                        referrerPolicy="no-referrer"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(otherParty.name || 'User')}&background=dc2626&color=ffffff&bold=true&rounded=true`;
+                        }}
                         className="w-10 h-10 rounded-xl object-cover border border-emerald-300"
                       />
                       <div>

@@ -33,6 +33,7 @@ import Button from '../../components/common/Button';
 import Badge from '../../components/common/Badge';
 import BloodBadge from '../../components/common/BloodBadge';
 import Spinner from '../../components/common/Spinner';
+import { getUserAvatar } from '../../utils/avatar';
 import UrgencyBadge from '../../components/request/UrgencyBadge';
 import StatusBadge from '../../components/request/StatusBadge';
 import ScoreGauge from '../../components/matching/ScoreGauge';
@@ -488,8 +489,13 @@ export default function AdminDashboard() {
                       <td className="py-3 px-3">
                         <div className="flex items-center gap-2.5">
                           <img
-                            src={u.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80'}
+                            src={getUserAvatar(u)}
                             alt={u.name}
+                            referrerPolicy="no-referrer"
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(u.name || 'User')}&background=dc2626&color=ffffff&bold=true&rounded=true`;
+                            }}
                             className="w-8 h-8 rounded-full object-cover border border-slate-200"
                           />
                           <div>

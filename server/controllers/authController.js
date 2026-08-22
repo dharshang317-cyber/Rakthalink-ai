@@ -11,6 +11,14 @@ const DESIGNATED_ADMIN_EMAILS = [
 ];
 
 /**
+ * Helper to generate a vibrant, high-resolution default avatar if Google does not return one
+ */
+const getDefaultAvatar = (name) => {
+  const cleanName = encodeURIComponent(name || 'User');
+  return `https://ui-avatars.com/api/?name=${cleanName}&background=dc2626&color=ffffff&bold=true&rounded=true`;
+};
+
+/**
  * @route   POST /api/auth/google
  * @desc    Authenticate or Register user using Google OAuth 2.0 ID Token
  * @access  Public
@@ -34,11 +42,12 @@ export const googleAuth = async (req, res) => {
       // Fallback only if Google verification failed: check if it's a test environment token
       if (process.env.NODE_ENV === 'development' && credential.startsWith('dev_test_token_')) {
         const testEmail = credential.replace('dev_test_token_', '').toLowerCase();
+        const testName = testEmail.split('@')[0];
         googleUser = {
           googleId: `google_dev_${testEmail}`,
           email: testEmail,
-          name: testEmail.split('@')[0],
-          avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80',
+          name: testName,
+          avatar: getDefaultAvatar(testName),
           emailVerified: true,
         };
       } else {
@@ -48,6 +57,7 @@ export const googleAuth = async (req, res) => {
 
     const emailNormalized = googleUser.email.toLowerCase();
     const isAdminEmail = DESIGNATED_ADMIN_EMAILS.includes(emailNormalized);
+    const resolvedAvatar = googleUser.avatar || getDefaultAvatar(googleUser.name);
 
     // 1. Check if user already exists by googleId OR by email
     let user = await User.findOne({
@@ -57,22 +67,24 @@ export const googleAuth = async (req, res) => {
     let isNewUser = false;
 
     if (!user) {
-      // 2. Create new user account
+      // 2. Create new user account with guaranteed avatar
       user = await User.create({
         googleId: googleUser.googleId,
         email: emailNormalized,
         name: googleUser.name,
-        avatar: googleUser.avatar || '',
+        avatar: resolvedAvatar,
         role: isAdminEmail ? 'admin' : 'both', // Auto-elevate designated admin
         isProfileCompleted: false,
         lastLogin: new Date(),
       });
       isNewUser = true;
     } else {
-      // 3. Update existing user's last login, avatar, and verify admin role
+      // 3. Update existing user's last login and ensure high quality avatar
       user.lastLogin = new Date();
-      if (!user.avatar && googleUser.avatar) {
+      if (googleUser.avatar) {
         user.avatar = googleUser.avatar;
+      } else if (!user.avatar) {
+        user.avatar = getDefaultAvatar(user.name);
       }
       if (!user.googleId) {
         user.googleId = googleUser.googleId;
@@ -126,6 +138,11 @@ export const getMe = async (req, res) => {
     // Check if user is in designated admin list and ensure role is updated
     if (user.email && DESIGNATED_ADMIN_EMAILS.includes(user.email.toLowerCase()) && user.role !== 'admin') {
       user.role = 'admin';
+    }
+
+    // Ensure avatar is populated
+    if (!user.avatar) {
+      user.avatar = getDefaultAvatar(user.name);
       await user.save();
     }
 
