@@ -5,12 +5,12 @@ import {
   getConversations,
   markMessagesRead,
 } from '../controllers/chatController.js';
-import { requireAuth } from '../middleware/auth.js';
+import { protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
 // All chat routes require authentication
-router.use(requireAuth);
+router.use(protect);
 
 router.post('/messages', sendMessage);
 router.get('/messages/:recipientId', getMessages);
