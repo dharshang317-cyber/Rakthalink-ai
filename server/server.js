@@ -44,9 +44,29 @@ app.use(
 );
 
 // 3. Cross-Origin Resource Sharing (CORS)
+const allowedOrigins = [
+  CLIENT_URL,
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+];
+
 app.use(
   cors({
-    origin: [CLIENT_URL, 'http://localhost:5173', 'http://127.0.0.1:5173'],
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps, curl, etc.)
+      if (!origin) return callback(null, true);
+      if (
+        allowedOrigins.includes(origin) ||
+        origin.endsWith('.vercel.app') ||
+        origin.includes('rakthalink') ||
+        process.env.NODE_ENV !== 'production'
+      ) {
+        return callback(null, true);
+      }
+      return callback(null, true);
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
@@ -79,18 +99,23 @@ app.get('/', (req, res) => {
   });
 });
 
-// 9. Mount API Routes
-app.use('/api/health', healthRoutes);
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/donors', donorRoutes);
-app.use('/api/requests', requestRoutes);
-app.use('/api/matches', matchRoutes);
-app.use('/api/notifications', notificationRoutes);
-app.use('/api/appointments', appointmentRoutes);
-app.use('/api/ai', aiRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/reports', reportRoutes);
+// 9. Mount API Routes (Supported both with /api prefix and root prefix for robustness)
+const mountAppRoutes = (prefix = '') => {
+  app.use(`${prefix}/health`, healthRoutes);
+  app.use(`${prefix}/auth`, authRoutes);
+  app.use(`${prefix}/users`, userRoutes);
+  app.use(`${prefix}/donors`, donorRoutes);
+  app.use(`${prefix}/requests`, requestRoutes);
+  app.use(`${prefix}/matches`, matchRoutes);
+  app.use(`${prefix}/notifications`, notificationRoutes);
+  app.use(`${prefix}/appointments`, appointmentRoutes);
+  app.use(`${prefix}/ai`, aiRoutes);
+  app.use(`${prefix}/admin`, adminRoutes);
+  app.use(`${prefix}/reports`, reportRoutes);
+};
+
+mountAppRoutes('/api');
+mountAppRoutes('');
 
 // 10. 404 Not Found & Global Error Handlers
 app.use(notFoundHandler);

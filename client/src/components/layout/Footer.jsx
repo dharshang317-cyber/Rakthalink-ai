@@ -90,10 +90,14 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-12 pt-6 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <p>© {new Date().getFullYear()} RakthaLink AI — Connecting Blood. Connecting Lives.</p>
-          <div className="flex items-center gap-1">
-            <span>Built with care for voluntary life-saving coordination</span>
+        <div className="mt-12 pt-6 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+          <p className="font-medium text-slate-300">
+            © 2026 | Developed by Dharshan G
+          </p>
+          <div className="flex items-center gap-2 text-slate-500">
+            <span>RakthaLink AI</span>
+            <span>•</span>
+            <span>Connecting Blood. Connecting Lives.</span>
           </div>
         </div>
       </div>

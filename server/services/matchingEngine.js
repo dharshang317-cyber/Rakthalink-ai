@@ -63,7 +63,7 @@ export const findMatchesForRequest = async (requestId) => {
       const daysSinceDonation = Math.floor(
         (Date.now() - new Date(donor.lastDonationDate).getTime()) / (1000 * 60 * 60 * 24)
       );
-      if (daysSinceDonation < 90) {
+      if (daysSinceDonation >= 0 && daysSinceDonation < 90) {
         recencyScore = Math.max(20, Math.round((daysSinceDonation / 90) * 100));
       }
     }

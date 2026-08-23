@@ -79,7 +79,7 @@ export default function DonorProfile() {
     loadProfile();
   }, [user]);
 
-  // Calculate days since last donation (90-day recovery standard)
+  // Calculate days since donation / future scheduled date (90-day recovery standard)
   const getDonationRecoveryStatus = () => {
     if (!lastDonationDate) {
       return { eligible: true, message: 'Ready to donate whenever needed.' };
@@ -88,11 +88,20 @@ export default function DonorProfile() {
     const currentTime = Date.now();
     const diffDays = Math.floor((currentTime - donationTime) / (1000 * 60 * 60 * 24));
 
+    if (diffDays < 0) {
+      const daysAhead = Math.abs(diffDays);
+      return {
+        eligible: true,
+        daysAhead,
+        message: `Scheduled / Planned donation date set for ${daysAhead} day${daysAhead === 1 ? '' : 's'} in the future.`,
+      };
+    }
     if (diffDays < 90) {
+      const daysLeft = 90 - diffDays;
       return {
         eligible: false,
-        daysLeft: 90 - diffDays,
-        message: `Recovery period: ${90 - diffDays} days remaining before recommended next whole blood donation.`,
+        daysLeft,
+        message: `Recovery period: ${daysLeft} day${daysLeft === 1 ? '' : 's'} remaining before recommended next whole blood donation.`,
       };
     }
     return {
@@ -381,7 +390,7 @@ export default function DonorProfile() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                  Date of Last Whole Blood Donation
+                  Date of Whole Blood Donation / Planned Date
                 </label>
                 <div className="relative">
                   <Calendar className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
@@ -389,7 +398,6 @@ export default function DonorProfile() {
                     type="date"
                     value={lastDonationDate}
                     onChange={(e) => setLastDonationDate(e.target.value)}
-                    max={new Date().toISOString().split('T')[0]}
                     className="w-full pl-10 pr-4 py-2.5 text-xs sm:text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-white transition"
                   />
                 </div>

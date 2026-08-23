@@ -1,7 +1,20 @@
 import axios from 'axios';
 
+// Normalize base URL to ensure '/api' prefix is always properly included
+const getBaseUrl = () => {
+  let envUrl = import.meta.env.VITE_API_URL;
+  if (!envUrl) {
+    return '/api';
+  }
+  envUrl = envUrl.trim().replace(/\/+$/, '');
+  if (!envUrl.endsWith('/api')) {
+    envUrl = `${envUrl}/api`;
+  }
+  return envUrl;
+};
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || '/api',
+  baseURL: getBaseUrl(),
   headers: {
     'Content-Type': 'application/json',
   },
