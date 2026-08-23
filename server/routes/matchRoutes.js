@@ -3,12 +3,16 @@ import {
   getMatchesForRequest,
   sendMatchRequest,
   respondToMatch,
+  handleEmailAction,
 } from '../controllers/matchController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// All match routes are protected by JWT authentication
+// Public email action handler (Token/reference verified)
+router.post('/:matchId/email-action', handleEmailAction);
+
+// Authenticated in-app match routes
 router.use(protect);
 
 router.get('/:requestId', getMatchesForRequest);

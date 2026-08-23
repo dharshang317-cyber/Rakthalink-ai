@@ -27,6 +27,7 @@ import appointmentRoutes from './routes/appointmentRoutes.js';
 import aiRoutes from './routes/aiRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import reportRoutes from './routes/reportRoutes.js';
+import chatRoutes from './routes/chatRoutes.js';
 
 // Initialize Express App
 const app = express();
@@ -112,6 +113,7 @@ const mountAppRoutes = (prefix = '') => {
   app.use(`${prefix}/ai`, aiRoutes);
   app.use(`${prefix}/admin`, adminRoutes);
   app.use(`${prefix}/reports`, reportRoutes);
+  app.use(`${prefix}/chat`, chatRoutes);
 };
 
 mountAppRoutes('/api');

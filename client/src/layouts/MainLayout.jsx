@@ -2,6 +2,7 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
+import WhatsAppChatDrawer from '../components/chat/WhatsAppChatDrawer';
 
 export default function MainLayout({ user = null, onLogout }) {
   return (
@@ -11,6 +12,8 @@ export default function MainLayout({ user = null, onLogout }) {
         <Outlet />
       </main>
       <Footer />
+      {/* Global WhatsApp Chat Drawer */}
+      <WhatsAppChatDrawer />
     </div>
   );
 }

@@ -9,6 +9,7 @@ import About from './pages/public/About';
 import HowItWorks from './pages/public/HowItWorks';
 import Safety from './pages/public/Safety';
 import Login from './pages/public/Login';
+import MatchActionPage from './pages/public/MatchActionPage';
 
 // App Pages
 import AIAssistantPage from './pages/ai/AIAssistantPage';
@@ -34,6 +35,7 @@ export default function App() {
           <Route path="how-it-works" element={<HowItWorks />} />
           <Route path="safety" element={<Safety />} />
           <Route path="login" element={<Login />} />
+          <Route path="match-action" element={<MatchActionPage />} />
           <Route path="ai-assistant" element={<AIAssistantPage />} />
 
           {/* Authenticated Protected Routes */}

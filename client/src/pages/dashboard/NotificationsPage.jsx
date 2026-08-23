@@ -17,6 +17,7 @@ import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';
 import Badge from '../../components/common/Badge';
 import Spinner from '../../components/common/Spinner';
+import ChatButton from '../../components/chat/ChatButton';
 import {
   fetchNotifications,
   markNotificationRead,
@@ -221,15 +222,25 @@ export default function NotificationsPage() {
                   )}
 
                   {/* General Action Links */}
-                  <div className="pt-2 flex items-center justify-between text-xs">
-                    {!n.isRead && (
-                      <button
-                        onClick={() => handleMarkRead(n._id)}
-                        className="text-[11px] font-semibold text-slate-500 hover:text-slate-800 underline"
-                      >
-                        Mark as read
-                      </button>
-                    )}
+                  <div className="pt-2 flex items-center justify-between text-xs gap-3">
+                    <div className="flex items-center gap-3">
+                      {!n.isRead && (
+                        <button
+                          onClick={() => handleMarkRead(n._id)}
+                          className="text-[11px] font-semibold text-slate-500 hover:text-slate-800 underline"
+                        >
+                          Mark as read
+                        </button>
+                      )}
+                      {n.senderId && (
+                        <ChatButton
+                          user={n.senderId}
+                          size="sm"
+                          showLabel
+                          className="py-1 px-2.5 text-[11px]"
+                        />
+                      )}
+                    </div>
 
                     {n.actionLink && n.type !== 'MATCH_FOUND' && (
                       <Link

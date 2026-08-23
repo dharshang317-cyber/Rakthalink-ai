@@ -13,16 +13,19 @@ import {
   Bell,
   Activity,
   Layers,
-  ChevronDown
+  ChevronDown,
+  MessageCircle
 } from 'lucide-react';
 import Logo from '../common/Logo';
 import Button from '../common/Button';
 import Badge from '../common/Badge';
 import useAuth from '../../hooks/useAuth';
+import { useChat } from '../../context/ChatContext';
 import { getUserAvatar } from '../../utils/avatar';
 
 export default function Navbar() {
   const { user, logout, isAuthenticated } = useAuth();
+  const { openChat, conversations, totalUnread } = useChat();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const navigate = useNavigate();
@@ -79,7 +82,27 @@ export default function Navbar() {
 
             {isAuthenticated && user ? (
               /* Authenticated User Menu */
-              <div className="relative flex items-center gap-3">
+              <div className="relative flex items-center gap-2.5">
+                {/* WhatsApp Chat Quick Trigger */}
+                <button
+                  onClick={() => {
+                    if (conversations && conversations.length > 0) {
+                      openChat(conversations[0].partner);
+                    } else {
+                      navigate('/matches');
+                    }
+                  }}
+                  className="p-2 rounded-xl text-emerald-700 bg-emerald-50 hover:bg-emerald-100/80 border border-emerald-200/80 relative transition shadow-2xs"
+                  title="WhatsApp Direct Chat"
+                >
+                  <MessageCircle className="w-5 h-5 text-[#25D366]" />
+                  {totalUnread > 0 && (
+                    <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 rounded-full bg-[#25D366] text-white text-[9px] font-black flex items-center justify-center ring-2 ring-white">
+                      {totalUnread}
+                    </span>
+                  )}
+                </button>
+
                 <Link
                   to="/notifications"
                   className="p-2 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-100 relative transition"

@@ -24,6 +24,7 @@ import BloodBadge from '../../components/common/BloodBadge';
 import Spinner from '../../components/common/Spinner';
 import useAuth from '../../hooks/useAuth';
 import { getUserAvatar } from '../../utils/avatar';
+import ChatButton from '../../components/chat/ChatButton';
 import {
   fetchMyAppointments,
   scheduleAppointment,
@@ -269,16 +270,19 @@ export default function AppointmentsPage() {
                 {otherParty && (
                   <div className="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
-                      <img
-                        src={getUserAvatar(otherParty)}
-                        alt={otherParty.name}
-                        referrerPolicy="no-referrer"
-                        onError={(e) => {
-                          e.target.onerror = null;
-                          e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(otherParty.name || 'User')}&background=dc2626&color=ffffff&bold=true&rounded=true`;
-                        }}
-                        className="w-10 h-10 rounded-xl object-cover border border-emerald-300"
-                      />
+                      <div className="relative shrink-0 flex items-center gap-1.5">
+                        <img
+                          src={getUserAvatar(otherParty)}
+                          alt={otherParty.name}
+                          referrerPolicy="no-referrer"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(otherParty.name || 'User')}&background=dc2626&color=ffffff&bold=true&rounded=true`;
+                          }}
+                          className="w-10 h-10 rounded-xl object-cover border border-emerald-300"
+                        />
+                        <ChatButton user={otherParty} size="sm" />
+                      </div>
                       <div>
                         <span className="text-[10px] font-bold uppercase text-emerald-800 tracking-wider">
                           Unlocked Contact ({isDonor ? 'Requester' : 'Voluntary Donor'}):
@@ -287,7 +291,8 @@ export default function AppointmentsPage() {
                       </div>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-3 text-xs">
+                    <div className="flex flex-wrap items-center gap-2.5 text-xs">
+                      <ChatButton user={otherParty} showLabel size="md" />
                       {otherParty.phone && (
                         <a
                           href={`tel:${otherParty.phone}`}

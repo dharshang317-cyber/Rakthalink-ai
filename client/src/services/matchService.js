@@ -23,3 +23,11 @@ export const respondToMatchRequest = async (matchId, action, notes = '') => {
   const response = await api.post(`/matches/${matchId}/respond`, { action, notes });
   return response.data;
 };
+
+/**
+ * Handle direct email button response (ACCEPT / DECLINE / CANCEL)
+ */
+export const respondViaEmailAction = async (matchId, action, donorId) => {
+  const response = await api.post(`/matches/${matchId}/email-action`, { action, donorId });
+  return response.data;
+};

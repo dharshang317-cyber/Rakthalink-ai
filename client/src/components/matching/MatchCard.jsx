@@ -15,6 +15,7 @@ import BloodBadge from '../common/BloodBadge';
 import Badge from '../common/Badge';
 import Button from '../common/Button';
 import ScoreGauge from './ScoreGauge';
+import ChatButton from '../chat/ChatButton';
 import { getUserAvatar } from '../../utils/avatar';
 
 export default function MatchCard({ match, onSendRequest }) {
@@ -34,24 +35,42 @@ export default function MatchCard({ match, onSendRequest }) {
     }
   };
 
+  const donorUser = {
+    _id: match.donorId,
+    name: match.donorName,
+    avatar: match.donorAvatar,
+    bloodGroup: match.donorBloodGroup,
+    role: 'donor',
+  };
+
   return (
     <Card hover className="p-5 border-slate-200 transition-all duration-200">
       <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
         
         {/* Donor Avatar & Information */}
         <div className="flex items-start gap-3.5">
-          <div className="relative">
-            <img
-              src={getUserAvatar({ avatar: match.donorAvatar, name: match.donorName })}
-              alt={match.donorName}
-              referrerPolicy="no-referrer"
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(match.donorName || 'Donor')}&background=dc2626&color=ffffff&bold=true&rounded=true`;
-              }}
-              className="w-12 h-12 rounded-2xl object-cover border border-slate-200"
+          <div className="relative shrink-0 flex items-center gap-1.5">
+            <div className="relative">
+              <img
+                src={getUserAvatar({ avatar: match.donorAvatar, name: match.donorName })}
+                alt={match.donorName}
+                referrerPolicy="no-referrer"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(match.donorName || 'Donor')}&background=dc2626&color=ffffff&bold=true&rounded=true`;
+                }}
+                className="w-12 h-12 rounded-2xl object-cover border border-slate-200"
+              />
+              <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-500 ring-2 ring-white"></div>
+            </div>
+
+            {/* Small WhatsApp chatbox icon straight next to profile picture */}
+            <ChatButton
+              user={donorUser}
+              matchId={match.matchId}
+              size="sm"
+              className="hover:scale-110"
             />
-            <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-500 ring-2 ring-white"></div>
           </div>
 
           <div className="space-y-1">
