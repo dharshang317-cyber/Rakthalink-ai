@@ -1,0 +1,33 @@
+# RakthaLink AI - Robots.txt
+# Allows indexing by Google, Bing, Yahoo, DuckDuckGo, and AI Knowledge Crawlers
+
+User-agent: *
+Allow: /
+
+# Specifically allow AI knowledge crawlers (ChatGPT, Claude, Gemini, Perplexity, Copilot, Apple)
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+# Sitemap Location
+Sitemap: https://rakthalink-ai.vercel.app/sitemap.xml
